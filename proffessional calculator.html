@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cool Gamer Calculator</title>
+  <style>
+    body {
+      background: radial-gradient(circle at center, #0f0c29, #302b63, #24243e);
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #maindiv {
+      width: 350px;
+      background: linear-gradient(145deg, #1f1c2c, #928dab);
+      border: 6px solid #0ff;
+      border-radius: 25px;
+      padding: 20px;
+      box-shadow: 0 0 25px #0ff, inset 0 0 15px #0ff;
+      animation: bounce 3s infinite ease-in-out;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    .display {
+      width: 90%;
+      height: 80px;
+      background: #111;
+      border: 4px solid #0ff;
+      border-radius: 15px;
+      margin: auto;
+      font-size: 34px;
+      color: #0f0;
+      text-align: right;
+      padding: 15px;
+      box-sizing: border-box;
+      overflow-x: auto;
+      text-shadow: 0 0 8px #0f0, 0 0 15px #0f0;
+    }
+    .allbuttons {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+    button {
+      height: 70px;
+      border: 3px solid black;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 2px 0px black;
+      box-shadow: 0 4px 0px black;
+      transition: 0.2s;
+    }
+    button:hover {
+      filter: brightness(1.3);
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #0ff, 0 0 30px #0ff;
+    }
+    button:active {
+      transform: scale(0.95) rotate(-5deg);
+    }
+    /* Gamer Colors */
+    .row1 { background: #ff3131; }  /* Red */
+    .row2 { background: #007bff; }  /* Blue */
+    .row3 { background: #28a745; }  /* Green */
+    .row4 { background: #ffae00; }  /* Yellow */
+    .row5 { background: #6f42c1; }  /* Purple */
+    .special { background: #0ff; color: black; text-shadow: none; }
+    .big-btn { grid-column: span 2; }
+  </style>
+</head>
+<body>
+  <div id="maindiv">
+    <div class="display" id="display"></div>
+    <div class="allbuttons">
+      <button id="onBtn" class="row1">ON</button>
+      <button id="clearBtn" class="row1">C</button>
+      <button id="clearAllBtn" class="row1">C All</button>
+      <button id="offBtn" class="row1">OFF</button>
+
+      <button class="row2">7</button>
+      <button class="row2">8</button>
+      <button class="row2">9</button>
+      <button class="row2">/</button>
+
+      <button class="row3">4</button>
+      <button class="row3">5</button>
+      <button class="row3">6</button>
+      <button class="row3">*</button>
+
+      <button class="row4">1</button>
+      <button class="row4">2</button>
+      <button class="row4">3</button>
+      <button class="row4">-</button>
+
+      <button class="row5">0</button>
+      <button class="row5">.</button>
+      <button class="special big-btn">=</button>
+      <button class="row5">+</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    const buttons = document.querySelectorAll(".allbuttons button");
+    const onBtn = document.getElementById("onBtn");
+    const offBtn = document.getElementById("offBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const clearAllBtn = document.getElementById("clearAllBtn");
+
+    let isOn = false;
+
+    function setButtonsEnabled(enabled) {
+      buttons.forEach(btn => {
+        if (btn.id !== "onBtn") {
+          btn.disabled = !enabled;
+          btn.style.opacity = enabled ? "1" : "0.5";
+        }
+      });
+    }
+
+    setButtonsEnabled(false);
+
+    onBtn.addEventListener("click", () => {
+      isOn = true;
+      display.textContent = "";
+      setButtonsEnabled(true);
+    });
+
+    offBtn.addEventListener("click", () => {
+      isOn = false;
+      display.textContent = "";
+      setButtonsEnabled(false);
+    });
+
+    clearBtn.addEventListener("click", () => {
+      if (!isOn) return;
+      display.textContent = display.textContent.slice(0, -1);
+    });
+
+    clearAllBtn.addEventListener("click", () => {
+      if (!isOn) return;
+      display.textContent = "";
+    });
+
+    buttons.forEach(btn => {
+      if (!["onBtn", "offBtn", "clearBtn", "clearAllBtn"].includes(btn.id)) {
+        btn.addEventListener("click", () => {
+          if (!isOn) return;
+          const value = btn.textContent;
+
+          if (value === "=") {
+            try {
+              display.textContent = eval(display.textContent);
+            } catch {
+              display.textContent = "Error";
+            }
+          } else {
+            display.textContent += value;
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
